@@ -1,0 +1,21 @@
+# --- General / IDE / OS ---
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+*.swp
+*.bak
+
+# --- Django / Backend (API Focused) ---
+# Recursive Python cache
+**/__pycache__/
+**/*.py[cod]
+**/*$py.class
+
+# Environment and Secrets
+venv/
+.env
+
+# Database
+db.sqlite3
