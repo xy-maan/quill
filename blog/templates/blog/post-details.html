@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  Quill - This Post Title
+{% endblock title %}
+
+{% block styles %}
+	<link rel="stylesheet" href="{% static "blog/post-details.css" %}">
+{% endblock styles %}
+
+{% block body %}
+
+  <section id="summary">
+		<h2>Post Title</h2>
+		<article>
+			<img src="{% static "blog/images/mountains.jpg" %}" alt="Post Title">
+			<address>By Maximilian</address>
+			<div>
+				Last Updated on <time>July 10th</time>
+			</div>
+		</article>
+	</section>
+
+	<main>
+		<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque deleniti sequi necessitatibus, voluptatibus ipsam officiis perspiciatis commodi assumenda eos libero adipisci similique repellendus sit numquam dolore ea. Deserunt, unde neque!</p>
+		<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque deleniti sequi necessitatibus, voluptatibus ipsam officiis perspiciatis commodi assumenda eos libero adipisci similique repellendus sit numquam dolore ea. Deserunt, unde neque!</p>
+		<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque deleniti sequi necessitatibus, voluptatibus ipsam officiis perspiciatis commodi assumenda eos libero adipisci similique repellendus sit numquam dolore ea. Deserunt, unde neque!</p>
+	</main>
+
+{% endblock body %}
