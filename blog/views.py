@@ -20,14 +20,13 @@ def index(request):
 
 def posts(request):
 
-    all_posts = Post.objects.all()
+    all_posts = Post.objects.all().order_by("-date")
     return render(request, "blog/all-posts.html", {
         "all_posts": all_posts
     })
 
 def post_details(request, slug):
-    all_posts = Post.objects.all()
-    identified_post = next(post for post in all_posts if post["slug"] == slug)
+    identified_post = Post.objects.get(slug=slug)
     return render(request, "blog/post-details.html", {
         "post": identified_post
     })
