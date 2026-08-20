@@ -28,5 +28,6 @@ def posts(request):
 def post_details(request, slug):
     identified_post = Post.objects.get(slug=slug)
     return render(request, "blog/post-details.html", {
-        "post": identified_post
+        "post": identified_post,
+        "tags": identified_post.tags.all()
     })
