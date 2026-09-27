@@ -12,6 +12,7 @@ Thumbs.db
 **/__pycache__/
 **/*.py[cod]
 **/*$py.class
+.django-stub-gen/
 
 # Environment and Secrets
 venv/
@@ -19,3 +20,7 @@ venv/
 
 # Database
 db.sqlite3
+
+#Images & Files
+uploads/
+**/images/
