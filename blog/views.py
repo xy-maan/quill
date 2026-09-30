@@ -1,6 +1,7 @@
 from datetime import date
 
 from django.shortcuts import render
+from django.views.generic import ListView, DetailView
 
 from .models import Post
 
@@ -18,16 +19,23 @@ def index(request):
         "posts": latest_posts
     })
 
-def posts(request):
+class PostsListView(ListView):
+    model = Post
+    template_name = "blog/all-posts.html"
+    context_object_name = "posts"
 
-    all_posts = Post.objects.all().order_by("-date")
-    return render(request, "blog/all-posts.html", {
-        "all_posts": all_posts
-    })
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.order_by("-date")
 
-def post_details(request, slug):
-    identified_post = Post.objects.get(slug=slug)
-    return render(request, "blog/post-details.html", {
-        "post": identified_post,
-        "tags": identified_post.tags.all()
-    })
+
+class PostDetailsView(DetailView):
+    template_name = "blog/post-details.html"
+    model = Post
+    context_object_name = "post"
+
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["tags"] = self.object.tags.all()
+        return context
