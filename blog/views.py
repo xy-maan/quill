@@ -2,8 +2,12 @@ from datetime import date
 
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
+from django.views import View
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 from .models import Post
+from .forms import CommentForm
 
 # Create your views here.
 
@@ -29,13 +33,32 @@ class PostsListView(ListView):
         return queryset.order_by("-date")
 
 
-class PostDetailsView(DetailView):
-    template_name = "blog/post-details.html"
-    model = Post
-    context_object_name = "post"
+class PostDetailsView(View):
 
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["tags"] = self.object.tags.all()
-        return context
+    def get(self, request, slug):
+        post = Post.objects.get(slug=slug)
+        comment_form = CommentForm()
+        comments = post.comments.all().order_by("-id")
+        return render(request, "blog/post-details.html", {
+            "post": post,
+            "comment_form": comment_form,
+            "tags": post.tags.all(),
+            "comments": comments
+        })
+
+    def post(self, request, slug):
+        form = CommentForm(request.POST)
+        post = Post.objects.get(slug=slug)
+
+        if form.is_valid():
+            comment = form.save(commit=False) # it doesn't save, but creates a model instance
+            comment.post = post
+            comment.save()
+            print("\nYour Comment was saved successfully\n")
+            return HttpResponseRedirect(reverse("post-details-page", args=[slug]))
+        
+        return render(request, "blog/post-details.html", {
+            "comment_form": form,
+            "post": post,
+            "tags": post.tags.all()
+        })
