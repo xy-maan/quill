@@ -39,11 +39,19 @@ class PostDetailsView(View):
         post = Post.objects.get(slug=slug)
         comment_form = CommentForm()
         comments = post.comments.all().order_by("-id")
+        stored_posts = request.session.get("stored_posts")
+
+        is_read_later = False
+
+        if post.id in stored_posts:
+            is_read_later = True
+
         return render(request, "blog/post-details.html", {
             "post": post,
             "comment_form": comment_form,
             "tags": post.tags.all(),
-            "comments": comments
+            "comments": comments,
+            "is_read_later": is_read_later
         })
 
     def post(self, request, slug):
@@ -62,3 +70,41 @@ class PostDetailsView(View):
             "post": post,
             "tags": post.tags.all()
         })
+
+class ReadLaterView(View):
+
+    def get(self, request):
+
+        stored_posts = request.session.get("stored_posts")
+
+        has_posts = False
+
+        posts = []
+
+        if stored_posts is not None:
+            has_posts = True
+            # for post_id in stored_posts:
+            #     posts.append(Post.objects.get(id=post_id))
+            posts = Post.objects.filter(id__in=stored_posts)
+
+        return render(request, "blog/read-later.html", {
+            "posts": posts,
+            "has_posts": has_posts
+        })
+
+    def post(self, request):
+        stored_posts = request.session.get("stored_posts")
+
+        if stored_posts is None:
+            stored_posts = []
+
+        post_id = int(request.POST["post_id"])
+
+        if post_id not in stored_posts:
+            stored_posts.append(post_id)
+            request.session["stored_posts"] = stored_posts
+        else:
+            stored_posts.remove(post_id)
+            request.session["stored_posts"] = stored_posts
+
+        return HttpResponseRedirect(reverse("index-page"))
